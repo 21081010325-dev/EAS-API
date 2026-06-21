@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><title>Toko Produk — Client App</title>
+<style>
+body{font-family:Arial;max-width:800px;margin:30px auto;padding:0 20px}
+fieldset{margin-bottom:20px;padding:12px;border-radius:8px}
+input{padding:8px;margin:4px 4px 4px 0}
+button{padding:8px 14px;background:#16a34a;color:#fff;border:none;border-radius:6px;cursor:pointer}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th,td{border:1px solid #ddd;padding:8px;font-size:14px}
+</style>
+</head><body>
+<h2>Toko Produk (Client App)</h2>
+<p>Website ini mengonsumsi <b>ProdukAPI</b> menggunakan API Key.</p>
+
+<fieldset>
+<legend>Pengaturan Koneksi API</legend>
+<input id="apiBase" placeholder="https://nama-api-server.onrender.com" style="width:60%">
+<input id="apiKey" placeholder="API Key kamu" style="width:30%">
+<button onclick="saveSettings()">Simpan</button>
+</fieldset>
+
+<fieldset>
+<legend>Tambah / Edit Produk</legend>
+<form id="productForm">
+  <input type="hidden" id="editId">
+  <input id="nama_produk" placeholder="Nama Produk" required>
+  <input id="harga" type="number" placeholder="Harga" required>
+  <input id="stok" type="number" placeholder="Stok" required>
+  <input id="deskripsi" placeholder="Deskripsi">
+  <button type="submit">Simpan</button>
+</form>
+</fieldset>
+
+<table>
+<thead><tr><th>ID</th><th>Nama</th><th>Harga</th><th>Stok</th><th>Aksi</th></tr></thead>
+<tbody id="productList"></tbody>
+</table>
+
+<script src="app.js"></script>
+</body></html>

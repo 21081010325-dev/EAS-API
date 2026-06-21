@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><title>Dashboard — ProdukAPI</title>
+<style>
+body{font-family:Arial;max-width:700px;margin:40px auto;padding:0 20px}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th,td{border:1px solid #ddd;padding:8px;font-size:14px}
+button{padding:8px 14px;background:#2563eb;color:#fff;border:none;border-radius:6px;cursor:pointer;margin:4px 0}
+.danger{background:#dc2626}
+</style>
+</head><body>
+<h2>Dashboard API Key</h2>
+<button onclick="generateKey()">+ Generate API Key Baru</button>
+<table>
+<thead><tr><th>API Key</th><th>Status</th><th>Dibuat</th><th>Aksi</th></tr></thead>
+<tbody id="keyList"></tbody>
+</table>
+
+<script>
+const token = localStorage.getItem('jwt_token');
+if (!token) window.location.href = '/login.html';
+
+async function loadKeys() {
+  const res = await fetch('/api/keys/my-keys', { headers: { Authorization: 'Bearer ' + token } });
+  if (res.status === 403 || res.status === 401) { window.location.href = '/login.html'; return; }
+  const keys = await res.json();
+  const tbody = document.getElementById('keyList');
+  tbody.innerHTML = keys.map(k => `
+    <tr>
+      <td><code>${k.api_key}</code></td>
+      <td>${k.status}</td>
+      <td>${k.created_at}</td>
+      <td>${k.status === 'active' ? `<button class="danger" onclick="revoke(${k.id})">Revoke</button>` : '-'}</td>
+    </tr>`).join('');
+}
+
+async function generateKey() {
+  const res = await fetch('/api/keys/generate', { method: 'POST', headers: { Authorization: 'Bearer ' + token } });
+  const data = await res.json();
+  alert('API Key baru: ' + data.api_key);
+  loadKeys();
+}
+
+async function revoke(id) {
+  if (!confirm('Nonaktifkan API Key ini?')) return;
+  await fetch('/api/keys/revoke/' + id, { method: 'PUT', headers: { Authorization: 'Bearer ' + token } });
+  loadKeys();
+}
+
+loadKeys();
+</script>
+</body></html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>ProdukAPI — Penyedia API Produk</title>
+<style>
+  body{font-family:Arial,sans-serif;max-width:900px;margin:40px auto;padding:0 20px;line-height:1.6;color:#222}
+  h1{color:#2563eb} h2{margin-top:40px;border-bottom:2px solid #eee;padding-bottom:6px}
+  nav a{margin-right:15px;text-decoration:none;color:#2563eb;font-weight:bold}
+  table{width:100%;border-collapse:collapse;margin:10px 0}
+  th,td{border:1px solid #ddd;padding:8px;text-align:left;font-size:14px}
+  th{background:#f3f4f6}
+  pre{background:#1e293b;color:#e2e8f0;padding:14px;border-radius:8px;overflow-x:auto;font-size:13px}
+  code{background:#f3f4f6;padding:2px 6px;border-radius:4px}
+  .btn{display:inline-block;background:#2563eb;color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;margin-top:10px}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/index.html">Beranda</a>
+  <a href="/register.html">Daftar</a>
+  <a href="/login.html">Login</a>
+</nav>
+
+<h1>ProdukAPI</h1>
+<p>ProdukAPI adalah layanan REST API sederhana untuk mengelola data Produk (Create, Read, Update, Delete).
+Untuk menggunakan API ini, kamu wajib memiliki <b>API Key</b>. Daftar akun, login, lalu generate API Key di dashboard.</p>
+<a class="btn" href="/register.html">Mulai Sekarang →</a>
+
+<h2>1. Cara Mendapatkan API Key</h2>
+<ol>
+  <li>Daftar akun di halaman <a href="/register.html">Register</a></li>
+  <li>Login di halaman <a href="/login.html">Login</a></li>
+  <li>Di Dashboard, klik tombol <b>Generate API Key</b></li>
+  <li>Simpan API Key tersebut, lalu sertakan di setiap request ke endpoint data via header <code>x-api-key</code></li>
+</ol>
+
+<h2>2. Autentikasi</h2>
+<p>Ada dua jenis kredensial:</p>
+<table>
+<tr><th>Jenis</th><th>Dipakai untuk</th><th>Cara kirim</th></tr>
+<tr><td>JWT Token</td><td>Akses akun (generate/lihat API Key)</td><td>Header <code>Authorization: Bearer &lt;token&gt;</code></td></tr>
+<tr><td>API Key</td><td>Akses endpoint data Produk (CRUD)</td><td>Header <code>x-api-key: &lt;api_key&gt;</code></td></tr>
+</table>
+
+<h2>3. Daftar Endpoint</h2>
+
+<h3>Auth</h3>
+<table>
+<tr><th>Method</th><th>Endpoint</th><th>Keterangan</th></tr>
+<tr><td>POST</td><td>/api/auth/register</td><td>Daftar akun baru</td></tr>
+<tr><td>POST</td><td>/api/auth/login</td><td>Login, mengembalikan JWT token</td></tr>
+</table>
+
+<h3>API Key (butuh JWT)</h3>
+<table>
+<tr><th>Method</th><th>Endpoint</th><th>Keterangan</th></tr>
+<tr><td>POST</td><td>/api/keys/generate</td><td>Membuat API Key baru</td></tr>
+<tr><td>GET</td><td>/api/keys/my-keys</td><td>Melihat semua API Key milik akun</td></tr>
+<tr><td>PUT</td><td>/api/keys/revoke/:id</td><td>Menonaktifkan API Key</td></tr>
+</table>
+
+<h3>Produk (butuh API Key di header x-api-key)</h3>
+<table>
+<tr><th>Method</th><th>Endpoint</th><th>Keterangan</th></tr>
+<tr><td>POST</td><td>/api/products</td><td>Tambah produk</td></tr>
+<tr><td>GET</td><td>/api/products</td><td>Lihat semua produk</td></tr>
+<tr><td>GET</td><td>/api/products/:id</td><td>Lihat 1 produk</td></tr>
+<tr><td>PUT</td><td>/api/products/:id</td><td>Update produk</td></tr>
+<tr><td>DELETE</td><td>/api/products/:id</td><td>Hapus produk</td></tr>
+</table>
+
+<h2>4. Contoh Request</h2>
+<pre>POST /api/products
+Headers: 
+  Content-Type: application/json
+  x-api-key: APIKEY-xxxxxxxxxxxx
+
+Body:
+{
+  "nama_produk": "Keyboard Mekanik",
+  "harga": 450000,
+  "stok": 10,
+  "deskripsi": "Keyboard gaming RGB"
+}</pre>
+
+<h2>5. Contoh Response</h2>
+<pre>{
+  "message": "Produk berhasil dibuat",
+  "id": 1
+}</pre>
+
+</body>
+</html>
