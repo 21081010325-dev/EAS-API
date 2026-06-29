@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 
+const { initDB } = require('./db');
 const authRoutes = require('./routes/auth');
 const apikeyRoutes = require('./routes/apikey');
 const productRoutes = require('./routes/products');
@@ -18,5 +19,18 @@ app.use('/api/products', productRoutes);
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`API server jalan di port ${PORT}`));
+if (require.main === module) {
+  initDB()
+    .then(() => {
+      const PORT = process.env.PORT || 3000;
+      app.listen(PORT, () => console.log(`API server jalan di port ${PORT}`));
+    })
+    .catch(err => {
+      console.error('Gagal inisialisasi database:', err);
+      process.exit(1);
+    });
+} else {
+  initDB().catch(err => console.error('Gagal inisialisasi database:', err));
+}
+
+module.exports = app;
