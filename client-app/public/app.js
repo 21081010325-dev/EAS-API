@@ -1,11 +1,18 @@
+function getApiBase() {
+  const base = localStorage.getItem('api_base') || '';
+  return base.replace(/\/+$/, ''); // selalu bersihkan trailing slash saat dipakai
+}
+
 function saveSettings() {
-  localStorage.setItem('api_base', document.getElementById('apiBase').value.trim());
+  let base = document.getElementById('apiBase').value.trim();
+  base = base.replace(/\/+$/, '');
+  localStorage.setItem('api_base', base);
   localStorage.setItem('api_key', document.getElementById('apiKey').value.trim());
   alert('Tersimpan!'); location.reload();
 }
 
 async function loadProducts() {
-  const base = localStorage.getItem('api_base');
+  const base = getApiBase();
   const key = localStorage.getItem('api_key');
   if (!base || !key) return;
 
@@ -30,7 +37,7 @@ async function loadProducts() {
 
 document.getElementById('productForm').onsubmit = async (e) => {
   e.preventDefault();
-  const base = localStorage.getItem('api_base');
+  const base = getApiBase();
   const key = localStorage.getItem('api_key');
   const editId = document.getElementById('editId').value;
 
@@ -64,7 +71,7 @@ function editProduct(p) {
 
 async function deleteProduct(id) {
   if (!confirm('Hapus produk ini?')) return;
-  const base = localStorage.getItem('api_base');
+  const base = getApiBase();
   const key = localStorage.getItem('api_key');
   const res = await fetch(`${base}/api/products/${id}`, { method: 'DELETE', headers: { 'x-api-key': key } });
   alert((await res.json()).message);
